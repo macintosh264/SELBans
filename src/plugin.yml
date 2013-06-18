@@ -1,0 +1,100 @@
+name: SQLBans
+description: Better banning, kicking and warning system, with stored SQL data for lookup.
+main: com.domsplace.SQLBans
+authors: [Dominic]
+website: http://domsplace.com/
+version: 1.00
+load: POSTWORLD
+permission: You don't have permission for this.
+commands:
+   ban:
+      description: Bans a player with a specified reason.
+      usage: /<command> [player] (length) [reason]
+      permission: SQLBans.ban
+      permission-message: §cYou don't have permission.
+      aliases: [tempban, banish]
+   kick:
+      description: Kicks a player with a specified reason.
+      usage: /<command> [player] [reason]
+      permission: SQLBans.kick
+      permission-message: §cYou don't have permission.
+   warn:
+      description: Warns a player with a message.
+      usage: /<command> [player] [reason]
+      permission: SQLBans.warn
+      permission-message: §cYou don't have permission.
+      aliases: [warning]
+   pardon:
+      description: Unbans a player.
+      usage: /<command> [player]
+      permission: SQLBans.pardon
+      aliases: [unban]
+      permission-message: §cYou don't have permission.
+   mute:
+      description: Warns a player with a message.
+      usage: /<command> [player] (duration) [reason]
+      permission: SQLBans.mute
+      permission-message: §cYou don't have permission.
+      aliases: [quiet, shutup, installwindowsvistakeyboarddrivers]
+   playerinfo:
+      description: Displays Player Info.
+      usage: /<command> [player] (page)
+      permission: SQLBans.playerinfo
+      permission-message: §cYou don't have permission.
+      aliases: [warns, kicks, bans, mutes]
+   sqlbans:
+      description: Reloads the SQLBans Configuration.
+      usage: /<command>
+      permission: SQLBans.reload
+      permission-message: §cYou don't have permission.
+permissions:
+   SQLBans.*:
+     description: Gives access to all SQLBans permissions
+     children:
+       SQLBans.ban: true
+       SQLBans.warn: true
+       SQLBans.kick: true
+       SQLBans.mute: true
+       SQLBans.playerinfo: true
+       SQLBans.reload: true
+   SQLBans.ban.notify:
+     description: View when a player is ban.
+     default: op
+   SQLBans.ban:
+     description: Allows /ban command access, and displays notification.
+     default: op
+     children:
+       SQLBans.ban.notify: true
+   SQLBans.warn.notify:
+     description: View when a player is warned.
+     default: op
+   SQLBans.warn:
+     description: Allows /warn command access, and displays notification.
+     default: op
+     children:
+       SQLBans.warn.notify: true
+   SQLBans.kick.notify:
+     description: View when a player is kicked.
+     default: op
+   SQLBans.kick:
+     description: Allows /ban command access, and displays notification.
+     default: op
+     children:
+       SQLBans.kick.notify: true
+   SQLBans.mute.notify:
+     description: View when a player is muted.
+     default: op
+   SQLBans.mute:
+     description: Allows /mute command access, and displays notification.
+     default: op
+     children:
+       SQLBans.mute.notify: true
+   SQLBans.pardon:
+     description: Allows /pardon command access.
+     default: op
+   SQLBans.playerinfo:
+     description: Allows /warns, /kicks, /bans, /mutes command access.
+     default: op
+   SQLBans.reload:
+     description: Allows access to reload the configuration.
+     default: op
