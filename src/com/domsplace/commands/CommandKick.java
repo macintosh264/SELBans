@@ -2,7 +2,7 @@ package com.domsplace.commands;
 
 import com.domsplace.BansBase;
 import com.domsplace.BansUtils;
-import com.domsplace.SQLBans;
+import com.domsplace.SELBans;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -11,10 +11,10 @@ import org.bukkit.entity.Player;
 
 public class CommandKick extends BansBase implements CommandExecutor {
     /* References Main Plugin */
-    private final SQLBans plugin;
+    private final SELBans plugin;
     
     /* Basic Constructor */
-    public CommandKick(SQLBans base) {
+    public CommandKick(SELBans base) {
         plugin = base;
     }
     

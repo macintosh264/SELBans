@@ -2,7 +2,7 @@ package com.domsplace.commands;
 
 import com.domsplace.BansBase;
 import com.domsplace.BansUtils;
-import com.domsplace.SQLBans;
+import com.domsplace.SELBans;
 import java.util.Date;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
@@ -13,10 +13,10 @@ import org.bukkit.entity.Player;
 
 public class CommandMute extends BansBase implements CommandExecutor {
     /* References Main Plugin */
-    private final SQLBans plugin;
+    private final SELBans plugin;
     
     /* Basic Constructor */
-    public CommandMute(SQLBans base) {
+    public CommandMute(SELBans base) {
         plugin = base;
     }
     
@@ -51,7 +51,7 @@ public class CommandMute extends BansBase implements CommandExecutor {
                 }
                 
                 BansUtils.PardonPlayer(target, "mute");
-                BansUtils.broadcastWithPerm("SQLBans.mute.notify", 
+                BansUtils.broadcastWithPerm("SELBans.mute.notify", 
                         ChatImportant + name + 
                         ChatDefault + 
                         " unmuted " + 

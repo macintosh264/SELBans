@@ -3,7 +3,7 @@ package com.domsplace.listeners;
 import com.domsplace.BansBase;
 import static com.domsplace.BansBase.MuteMessageChat;
 import com.domsplace.BansUtils;
-import com.domsplace.SQLBans;
+import com.domsplace.SELBans;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
@@ -19,12 +19,12 @@ import org.bukkit.scheduler.BukkitTask;
 public class BanListener extends BansBase implements Listener {
     
     /* References Main Plugin */
-    private final SQLBans plugin;
+    private final SELBans plugin;
     
     public BukkitTask checkBans;
     
     /* Basic Constructor */
-    public BanListener(SQLBans base) {
+    public BanListener(SELBans base) {
         plugin = base;
         
         checkBans = Bukkit.getServer().getScheduler().runTaskTimer(plugin, new Runnable() {

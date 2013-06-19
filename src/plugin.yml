@@ -1,6 +1,6 @@
-name: SQLBans
+name: SELBans
 description: Better banning, kicking and warning system, with stored SQL data for lookup.
-main: com.domsplace.SQLBans
+main: com.domsplace.SELBans
 authors: [Dominic]
 website: http://domsplace.com/
 version: 1.00
@@ -10,91 +10,91 @@ commands:
    ban:
       description: Bans a player with a specified reason.
       usage: /<command> [player] (length) [reason]
-      permission: SQLBans.ban
+      permission: SELBans.ban
       permission-message: §cYou don't have permission.
       aliases: [tempban, banish]
    kick:
       description: Kicks a player with a specified reason.
       usage: /<command> [player] [reason]
-      permission: SQLBans.kick
+      permission: SELBans.kick
       permission-message: §cYou don't have permission.
    warn:
       description: Warns a player with a message.
       usage: /<command> [player] [reason]
-      permission: SQLBans.warn
+      permission: SELBans.warn
       permission-message: §cYou don't have permission.
       aliases: [warning]
    pardon:
       description: Unbans a player.
       usage: /<command> [player]
-      permission: SQLBans.pardon
+      permission: SELBans.pardon
       aliases: [unban]
       permission-message: §cYou don't have permission.
    mute:
       description: Warns a player with a message.
       usage: /<command> [player] (duration) [reason]
-      permission: SQLBans.mute
+      permission: SELBans.mute
       permission-message: §cYou don't have permission.
       aliases: [quiet, shutup, installwindowsvistakeyboarddrivers]
    playerinfo:
       description: Displays Player Info.
       usage: /<command> [player] (page)
-      permission: SQLBans.playerinfo
+      permission: SELBans.playerinfo
       permission-message: §cYou don't have permission.
       aliases: [warns, kicks, bans, mutes]
-   sqlbans:
-      description: Reloads the SQLBans Configuration.
+   SELBans:
+      description: Reloads the SELBans Configuration.
       usage: /<command>
-      permission: SQLBans.reload
+      permission: SELBans.reload
       permission-message: §cYou don't have permission.
 permissions:
-   SQLBans.*:
-     description: Gives access to all SQLBans permissions
+   SELBans.*:
+     description: Gives access to all SELBans permissions
      children:
-       SQLBans.ban: true
-       SQLBans.warn: true
-       SQLBans.kick: true
-       SQLBans.mute: true
-       SQLBans.playerinfo: true
-       SQLBans.reload: true
-   SQLBans.ban.notify:
+       SELBans.ban: true
+       SELBans.warn: true
+       SELBans.kick: true
+       SELBans.mute: true
+       SELBans.playerinfo: true
+       SELBans.reload: true
+   SELBans.ban.notify:
      description: View when a player is ban.
      default: op
-   SQLBans.ban:
+   SELBans.ban:
      description: Allows /ban command access, and displays notification.
      default: op
      children:
-       SQLBans.ban.notify: true
-   SQLBans.warn.notify:
+       SELBans.ban.notify: true
+   SELBans.warn.notify:
      description: View when a player is warned.
      default: op
-   SQLBans.warn:
+   SELBans.warn:
      description: Allows /warn command access, and displays notification.
      default: op
      children:
-       SQLBans.warn.notify: true
-   SQLBans.kick.notify:
+       SELBans.warn.notify: true
+   SELBans.kick.notify:
      description: View when a player is kicked.
      default: op
-   SQLBans.kick:
+   SELBans.kick:
      description: Allows /ban command access, and displays notification.
      default: op
      children:
-       SQLBans.kick.notify: true
-   SQLBans.mute.notify:
+       SELBans.kick.notify: true
+   SELBans.mute.notify:
      description: View when a player is muted.
      default: op
-   SQLBans.mute:
+   SELBans.mute:
      description: Allows /mute command access, and displays notification.
      default: op
      children:
-       SQLBans.mute.notify: true
-   SQLBans.pardon:
+       SELBans.mute.notify: true
+   SELBans.pardon:
      description: Allows /pardon command access.
      default: op
-   SQLBans.playerinfo:
+   SELBans.playerinfo:
      description: Allows /warns, /kicks, /bans, /mutes command access.
      default: op
-   SQLBans.reload:
+   SELBans.reload:
      description: Allows access to reload the configuration.
      default: op

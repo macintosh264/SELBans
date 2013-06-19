@@ -143,7 +143,7 @@ public class BansUtils extends BansBase {
 
         NotifyMessage += ChatDefault + ".";
 
-        broadcastWithPerm("SQLBans.ban.notify", NotifyMessage);
+        broadcastWithPerm("SELBans.ban.notify", NotifyMessage);
         
         player.setBanned(true);
         
@@ -175,7 +175,7 @@ public class BansUtils extends BansBase {
         
         String NotifyMessage = ChatImportant + PlayerName + ChatDefault + " kicked " + ChatImportant + target.getName() + ChatDefault + " for " + ChatImportant + reason + ChatDefault + ".";
         
-        broadcastWithPerm("SQLBans.kick.notify", NotifyMessage);
+        broadcastWithPerm("SELBans.kick.notify", NotifyMessage);
         
         target.kickPlayer(KickMessageFormat(KickMessage, reason, banner));
     }
@@ -191,7 +191,7 @@ public class BansUtils extends BansBase {
         
         String NotifyMessage = ChatImportant + PlayerName + ChatDefault + " warned " + ChatImportant + target.getName() + ChatDefault + " for " + ChatImportant + reason + ChatDefault + ".";
         
-        broadcastWithPerm("SQLBans.warn.notify", NotifyMessage);
+        broadcastWithPerm("SELBans.warn.notify", NotifyMessage);
         
         target.sendMessage(KickMessageFormat(WarnMessage, reason, banner));
     }
@@ -217,7 +217,7 @@ public class BansUtils extends BansBase {
 
         NotifyMessage += ChatDefault + ".";
 
-        broadcastWithPerm("SQLBans.mute.notify", NotifyMessage);
+        broadcastWithPerm("SELBans.mute.notify", NotifyMessage);
         
         /* Send Localized Message */
         if(player.isOnline()) {

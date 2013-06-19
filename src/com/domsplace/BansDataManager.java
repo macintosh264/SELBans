@@ -13,7 +13,7 @@ public class BansDataManager extends BansBase {
     public static YamlConfiguration config;
     public static File configFile;
     
-    public static boolean checkConfig(SQLBans plugin) {
+    public static boolean checkConfig(SELBans plugin) {
         //Create YML if not exists.//
         if(!plugin.getDataFolder().exists()) {
             plugin.getDataFolder().mkdir();
@@ -38,7 +38,7 @@ public class BansDataManager extends BansBase {
                 config.set("sql.host", "localhost");
                 config.set("sql.database", "minecraft");
                 config.set("sql.port", "3306");
-                config.set("sql.tableprefix", "SQLBans");
+                config.set("sql.tableprefix", "SELBans");
             }
             BansUtils.sqlHost = config.getString("sql.host");
             BansUtils.sqlDB = config.getString("sql.database");

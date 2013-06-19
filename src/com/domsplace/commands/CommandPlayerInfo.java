@@ -3,7 +3,7 @@ package com.domsplace.commands;
 import com.domsplace.BansBase;
 import com.domsplace.BansDataManager;
 import com.domsplace.BansUtils;
-import com.domsplace.SQLBans;
+import com.domsplace.SELBans;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -17,16 +17,16 @@ import org.bukkit.entity.Player;
 
 public class CommandPlayerInfo extends BansBase implements CommandExecutor {
     /* References Main Plugin */
-    private final SQLBans plugin;
+    private final SELBans plugin;
     
     /* Basic Constructor */
-    public CommandPlayerInfo(SQLBans base) {
+    public CommandPlayerInfo(SELBans base) {
         plugin = base;
     }
     
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String alias, String[] args) {
-        if(cmd.getName().equalsIgnoreCase("sqlbans")) {
+        if(cmd.getName().equalsIgnoreCase("SELBans")) {
             sender.sendMessage(ChatDefault + "Reloading Config...");
             
             if(!BansDataManager.checkConfig(plugin)) {
