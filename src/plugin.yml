@@ -3,7 +3,7 @@ description: Better banning, kicking and warning system, with stored SQL data fo
 main: com.domsplace.SELBans
 authors: [Dominic]
 website: http://domsplace.com/
-version: 1.00
+version: 1.01
 load: POSTWORLD
 permission: You don't have permission for this.
 commands:

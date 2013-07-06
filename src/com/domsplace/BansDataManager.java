@@ -87,6 +87,11 @@ public class BansDataManager extends BansBase {
             if(!config.contains(p + "mutemessagecommand")) {
                 config.set(p + "mutemessagecommand", MuteMessageCommand);
             }
+            
+            if(!config.contains("maxbantime")) {
+                config.set("maxbantime", "NONE");
+            }
+            
             BansBase.WarnMessage = config.getString(p + "warnmessage");
             BansBase.KickMessage = config.getString(p + "kickmessage");
             BansBase.BanMessage = config.getString(p + "banmessage");
@@ -95,6 +100,10 @@ public class BansDataManager extends BansBase {
             BansBase.MuteMessageTemp = config.getString(p + "mutemessagetemp");
             BansBase.MuteMessageChat = config.getString(p + "mutemessagechat");
             BansBase.MuteMessageCommand = config.getString(p + "mutemessagecommand");
+            
+            if(!config.getString("maxbantime").equalsIgnoreCase("NONE")) {
+                BansBase.MaxBanTime = config.getLong("maxbantime");
+            }
             
             //Add Muted Commands
             if(!config.contains("mutedcommands")) {

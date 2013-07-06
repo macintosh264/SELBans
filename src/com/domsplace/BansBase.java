@@ -19,5 +19,7 @@ public class BansBase {
     
     public static List<String> mutedCommands = new ArrayList<String>();
     
+    public static long MaxBanTime = -1;
+    
     public static boolean hideDeathMessage = true;
 }

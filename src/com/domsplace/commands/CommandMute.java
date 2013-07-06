@@ -1,6 +1,7 @@
 package com.domsplace.commands;
 
 import com.domsplace.BansBase;
+import static com.domsplace.BansBase.ChatError;
 import com.domsplace.BansUtils;
 import com.domsplace.SELBans;
 import java.util.Date;
@@ -90,6 +91,15 @@ public class CommandMute extends BansBase implements CommandExecutor {
             if(useTime) {
                 unbanDate = BansUtils.nowAndString(args[1]);
                 message = "";
+                
+                if(BansBase.MaxBanTime > -1) {
+                    long maxTime = (new Date(BansUtils.getNow()).getTime()) + BansBase.MaxBanTime*3600000;
+                    if(unbanDate.getTime() > maxTime) {
+                        sender.sendMessage(ChatError + "Please enter a time less than " + BansBase.MaxBanTime + " hours.");
+                        return true;
+                    }
+                }
+                
                 for(int i = 2; i < args.length; i++) {
                     message += args[i];
                     if(i < (args.length - 1)) {
