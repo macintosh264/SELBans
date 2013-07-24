@@ -115,9 +115,16 @@ public class CommandPlayerInfo extends BansBase implements CommandExecutor {
                     
                     Message += ChatDefault + ", for " + BansUtils.TimeDiff(start, end);
                 }
-                if(!(sender instanceof Player)) {
-                    Message += ChatDefault + ", At: " + ChatImportant + banData.get("pos");
+                
+                String world = banData.get("world");
+                if(world == null || world.equalsIgnoreCase("null")) {
+                    world = "UknownWorld";
                 }
+                
+                //if(!(sender instanceof Player)) {
+                    Message += ChatDefault + ", At: " + ChatImportant + banData.get("pos") + " : " + world;
+                //}
+                
                 if(banData.get("active").equalsIgnoreCase("true")) {
                     Message += ChatDefault + ", " + ChatError + "Active";
                 }

@@ -7,6 +7,9 @@ import static com.domsplace.BansBase.MuteMessage;
 import static com.domsplace.BansBase.MuteMessageTemp;
 import static com.domsplace.BansBase.WarnMessage;
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.io.OutputStream;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 public class BansDataManager extends BansBase {
@@ -19,9 +22,23 @@ public class BansDataManager extends BansBase {
             plugin.getDataFolder().mkdir();
         }
         try {
-            configFile = new File(plugin.getDataFolder() + "/config.yml");
+            configFile = new File(plugin.getDataFolder(), "/config.yml");
             if(!configFile.exists()) {
                 configFile.createNewFile();
+            }
+            
+            File webInterface = new File(plugin.getDataFolder(), "SelBans.php");
+            if(!webInterface.exists()) {
+                InputStream is = plugin.getResource("SelBans.php");
+                OutputStream os = new FileOutputStream(webInterface);
+                int read = 0;
+                byte[] bytes = new byte[1024];
+                while ((read = is.read(bytes)) != -1) {
+			os.write(bytes, 0, read);
+		}
+                
+                os.close();
+                is.close();
             }
             
             //Load YML into memory.
@@ -139,6 +156,12 @@ public class BansDataManager extends BansBase {
                         + "PRIMARY KEY (id) "
                     + ");";
             BansUtils.sqlQuery(statement);
+            
+            
+            /*** Alter Table If needed ***/
+            statement = "ALTER IGNORE TABLE " + BansUtils.sqlDB + "." + BansUtils.sqlTable + "Bans ADD `world` VARCHAR(2048) NULL DEFAULT NULL;";
+            BansUtils.sqlQuery(statement, true);
+            
             return true;
         } catch(Exception ex) {
             BansUtils.msgConsole(ChatError + "Failed to load Config! Error: " + ex.getLocalizedMessage());

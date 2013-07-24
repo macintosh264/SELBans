@@ -80,10 +80,12 @@ public class BansUtils extends BansBase {
     public static void addBan(OfflinePlayer player, String reason, CommandSender banner, Date unbandate, String type, boolean active) {        
         String BannerName = "CONSOLE";
         String location = "0, 0, 0";
+        String world = "NULL";
 
         if((banner instanceof Player)) {
             BannerName = ((Player) banner).getName();
             location = getStringLocation(((Player) banner).getLocation());
+            world = ((Player) banner).getLocation().getWorld().getName();
         }
         
         reason = reason.replaceAll("'", "\"");
@@ -95,6 +97,7 @@ public class BansUtils extends BansBase {
                     + "`type`, "
                     + "`playerby`, "
                     + "`pos`, "
+                    + "`world`, "
                     + "`date`, "
                     + "`unbandate`, "
                     + "`active`"
@@ -104,6 +107,7 @@ public class BansUtils extends BansBase {
                     + "'" + type + "', "
                     + "'" + BannerName + "', "
                     + "'" + location + "', "
+                    + "'" + world + "', "
                     + "'" + dateToSQL(new Date()) + "', "
                     + "'" + dateToSQL(unbandate) + "', "
                     + "'" + active + "'"
@@ -555,6 +559,16 @@ public class BansUtils extends BansBase {
             return result;
         } catch (SQLException ex) {
             msgConsole(ChatError + "Failed to execute SQL query. Error: " + ex.getLocalizedMessage());
+        }
+        return false;
+    }
+    
+    public static boolean sqlQuery(String query, boolean SUPPRESS) {
+        try {
+            PreparedStatement sqlStmt = dbCon.prepareStatement(query);
+            boolean result = sqlStmt.execute(query);
+            return result;
+        } catch (SQLException ex) {
         }
         return false;
     }
