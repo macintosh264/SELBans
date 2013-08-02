@@ -3,7 +3,7 @@ description: Better banning, kicking and warning system, with stored SQL data fo
 main: com.domsplace.SELBans
 authors: [Dominic]
 website: http://domsplace.com/
-version: 1.02
+version: 1.03
 load: POSTWORLD
 permission: You don't have permission for this.
 commands:
@@ -36,12 +36,17 @@ commands:
       permission: SELBans.mute
       permission-message: §cYou don't have permission.
       aliases: [quiet, shutup, installwindowsvistakeyboarddrivers]
+   demote:
+      description: Demotes a player and stores the reason.
+      usage: /<command> [player] [group] [reason]
+      permission: SELBans.demote
+      permission-message: §cYou don't have permission.
    playerinfo:
       description: Displays Player Info.
       usage: /<command> [player] (page)
       permission: SELBans.playerinfo
       permission-message: §cYou don't have permission.
-      aliases: [warns, kicks, bans, mutes]
+      aliases: [warns, kicks, bans, mutes, demotes]
    SELBans:
       description: Reloads the SELBans Configuration.
       usage: /<command>
@@ -55,6 +60,7 @@ permissions:
        SELBans.warn: true
        SELBans.kick: true
        SELBans.mute: true
+       SELBans.demote: true
        SELBans.playerinfo: true
        SELBans.reload: true
    SELBans.ban.notify:
@@ -89,6 +95,11 @@ permissions:
      default: op
      children:
        SELBans.mute.notify: true
+   SELBans.demote:
+     description: Allows /demote command access, and displays notification.
+     default: op
+     children:
+       SELBans.demote.notify: true
    SELBans.pardon:
      description: Allows /pardon command access.
      default: op

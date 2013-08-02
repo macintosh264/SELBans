@@ -13,14 +13,15 @@
 	 */
 	 
 	function connectToSQL() {
-		new BanDatabase('localhost', '3306', 'minecraft', 'SelBans', 'root', 'password');	//Change this line to suit your server.
+		new BanDatabase('localhost', '3306', 'minecraft', 'SELBans', 'root', 'password');	//Change this line to suit your server.
 	}
 	 
 	 
 	/*
 	 * Everything below is optional and only recommended for advanced users:
 	 */
-	  
+	
+	
 	$pageTitle = 'SELBans';
 	$bootstrap = 'http://twitter.github.io/bootstrap/assets/js/bootstrap.js';
 	$bootstrapCSS = 'http://twitter.github.io/bootstrap/assets/css/bootstrap.css';
@@ -39,6 +40,7 @@
 	BanType::$kick = new BanType('kick');
 	BanType::$warn = new BanType('warn');
 	BanType::$mute = new BanType('mute');
+	BanType::$demote = new BanType('demote');
 	
 	function closeSQL() {
 		if(!isset(BanDatabase::$instance)) {
@@ -111,6 +113,7 @@
 	}
 	
 	function sendRequest($data) {
+		header('Content-Type: application/json');
 		$jsonData = json_encode($data);
 		echo $jsonData;
 		closeSQL();
@@ -194,7 +197,7 @@
 			$statement = '
 				SELECT * FROM ' . BanDatabase::$instance->getDBPrefix() . '
 				WHERE `player` LIKE \'' . $player . '\'
-				ORDER BY `date` ASC;
+				ORDER BY `date` DESC;
 			';
 			
 			$results = BanDatabase::$instance->fetchSQL($statement);
@@ -207,11 +210,15 @@
 					$isActive = true;
 				}
 				
+				if(BanType::getTypeFromString($result["type"]) == null) {
+					continue;
+				}
+				
 				$ban = new Ban(
 					$result["playerby"],
 					$result["player"],
 					$result["reason"],
-					BanLocation::createLocationFromString($result["pos"], $result["world"]),
+					BanLocation::createLocationFromString($result["pos"], ''),
 					BanType::getTypeFromString($result["type"]),
 					strtotime($result["date"]),
 					strtotime($result["unbandate"]),
@@ -232,6 +239,7 @@
 					IF(ISNULL(bans.bans), 0, bans.bans) as 'Bans',
 					IF(ISNULL(kicks.kicks), 0, kicks.kicks) as 'Kicks',
 					IF(ISNULL(warns.warns), 0, warns.warns) as 'Warns',
+					IF(ISNULL(demotes.demotes), 0, demotes.demotes) as 'Demotes',
 					IF(ISNULL(mutes.mutes), 0, mutes.mutes) as 'Mutes'
 				FROM
 					" . BanDatabase::$instance->getDBPrefix() . "
@@ -240,45 +248,56 @@
 							`player` as 'p',
 							COUNT(`type`) as 'bans'
 						FROM
-							`SelBansBans`
+							" . BanDatabase::$instance->getDBPrefix() . "
 						WHERE
 							type LIKE 'ban'
 						GROUP BY
 							`player`
-					) bans ON SelBansBans.player = bans.p
+					) bans ON " . BanDatabase::$instance->getDBPrefix() . ".player = bans.p
 					LEFT JOIN (
 						SELECT
 							`player` as 'p',
 							COUNT(`type`) as 'kicks'
 						FROM
-							`SelBansBans`
+							" . BanDatabase::$instance->getDBPrefix() . "
 						WHERE
 							type LIKE 'kick'
 						GROUP BY
 							`player`
-					) kicks ON SelBansBans.player = kicks.p
+					) kicks ON " . BanDatabase::$instance->getDBPrefix() . ".player = kicks.p
 					LEFT JOIN (
 						SELECT
 							`player` as 'p',
 							COUNT(`type`) as 'warns'
 						FROM
-							`SelBansBans`
+							" . BanDatabase::$instance->getDBPrefix() . "
 						WHERE
 							type LIKE 'warn'
 						GROUP BY
 							`player`
-					) warns ON SelBansBans.player = warns.p
+					) warns ON " . BanDatabase::$instance->getDBPrefix() . ".player = warns.p
+					LEFT JOIN (
+						SELECT
+							`player` as 'p',
+							COUNT(`type`) as 'demotes'
+						FROM
+							" . BanDatabase::$instance->getDBPrefix() . "
+						WHERE
+							type LIKE 'demote'
+						GROUP BY
+							`player`
+					) demotes ON " . BanDatabase::$instance->getDBPrefix() . ".player = demotes.p
 					LEFT JOIN (
 						SELECT
 							`player` as 'p',
 							COUNT(`type`) as 'mutes'
 						FROM
-							`SelBansBans`
+							" . BanDatabase::$instance->getDBPrefix() . "
 						WHERE
 							type LIKE 'mute'
 						GROUP BY
 							`player`
-					) mutes ON SelBansBans.player = mutes.p
+					) mutes ON " . BanDatabase::$instance->getDBPrefix() . ".player = mutes.p
 				WHERE
 					`player` LIKE '" . str_replace('_', '\_', $player) . "%'
 				GROUP BY
@@ -303,7 +322,7 @@
 			$this->z = $z;
 			
 			if($world == "") {
-				$world = "UknownWorld";
+				$world = "world";
 			}
 			
 			$this->world = $world;
@@ -340,6 +359,7 @@
 		public static $ban;
 		public static $kick;
 		public static $warn;
+		public static $demote;
 		public static $mute;
 		
 		public $type;
@@ -354,7 +374,10 @@
 		
 		public static function getTypeFromString($type) {
 			$var = strtolower($type);
-			return BanType::$$var;
+			if(!isset(BanType::$$var)) {
+                            return null;
+                        }
+                        return BanType::$$var;
 		}
 	}
 	
@@ -460,10 +483,11 @@
 				
 				$.ajax({
 					type: "POST",
+					dataType: "json",
 					data: dta,
 					async: false,
 					success: function(data) {
-						returnData = JSON.parse(data);
+						returnData = data;
 					}
 				});
 				
@@ -472,7 +496,7 @@
 			
 			$(document).ready(function() {
 				var result = getRequest({"request": "checkSQL"});
-				if(result.toUpperCase() == ("false").toUpperCase()) {
+				if(!result) {
 					dbCon = false;
 				} else {
 					dbCon = true;
@@ -693,7 +717,7 @@
 			}
 			
 			function formatLocation(pos, world) {
-				return pos + ' in ' + world;
+				return pos;
 			}
 			
 			function addBan(element, banned, banner, reason, when, untildate, isActive, id, pos, world, type, elID) {
@@ -705,7 +729,7 @@
 				
 				var active = '';
 				if(isActive) {
-					active = '<span class="label label-important" style="float: right; clear: none;">Active</span>';
+					active = '<span class="label label-important" style="margin-left: 4px;">Active</span>';
 				}
 				
 				var bModal = '' +
@@ -784,6 +808,11 @@
 					msg = 'muted';
 				}
 				
+				if(type == 'demote') {
+					el = 'BansTabDemotes';
+					msg = 'demoted';
+				}
+				
 				element = $("#" + el + " #accordion");
 				addBan(element, player, banner, reason, when, until, active, id, pos, world, msg, el);
 			}
@@ -836,6 +865,7 @@
 				$("#BansTabBans").html(defaultTabs());
 				$("#BansTabKicks").html(defaultTabs());
 				$("#BansTabWarns").html(defaultTabs());
+				$("#BansTabDemotes").html(defaultTabs());
 				$("#BansTabMutes").html(defaultTabs());
 				
 				getPlayer(player);
@@ -843,11 +873,12 @@
 				checkForNothing($("#BansTabBans #accordion"));
 				checkForNothing($("#BansTabKicks #accordion"));
 				checkForNothing($("#BansTabWarns #accordion"));
+				checkForNothing($("#BansTabDemotes #accordion"));
 				checkForNothing($("#BansTabMutes #accordion"));
 				
 				$("#BansModal").modal('show');
 				
-				return true;
+				return false;
 			}
 		</script>
 		
@@ -873,6 +904,10 @@
 			
 			.PlayerImage img {
 				border-radius: 4px;
+				min-width: 64px;
+				min-height: 64px;
+				display: inline-block;
+				background: #DDD;
 			}
 		</style>
 	</head>
@@ -893,6 +928,7 @@
 						<li><a href="#BansTabKicks" data-toggle="tab">Kicks</a></li>
 						<li><a href="#BansTabWarns" data-toggle="tab">Warnings</a></li>
 						<li><a href="#BansTabMutes" data-toggle="tab">Mutes</a></li>
+						<li><a href="#BansTabsDemotes" data-toggle="tab">Demotions</a></li>
 					</ul>
 					<div class="tab-content">
 						<div class="tab-pane active" id="BansTabBans">
@@ -902,6 +938,8 @@
 						<div class="tab-pane" id="BansTabWarns">
 						</div>
 						<div class="tab-pane" id="BansTabMutes">
+						</div>
+						<div class="tab-pane" id="BansTabDemotes">
 						</div>
 					</div>
 				</div>
@@ -974,7 +1012,7 @@
 			<footer>
 				<div class="pull-right" style="float: right; clear: both;"><a href="#PageTop">Back to Top</a></div>
 				<a href="http://dev.bukkit.org/bukkit-plugins/selbans/">SELBans</a> Web Interface.<br />
-				Code by <a href="http://domsplace.com/">Dominic Masters</a> and <a href="http://oxafemble.me">Jordan Atkins</a>.
+				Code by <a href="http://domsplace.com/">Dominic Masters</a> and <a href="http://oxafemble.me">Jordan Atkins</a>. This version is specifically for Nicholas Cage!
 			</footer>
 		</div>
 	</body>

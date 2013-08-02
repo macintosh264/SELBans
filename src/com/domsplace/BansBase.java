@@ -10,6 +10,7 @@ public class BansBase {
     
     public static String WarnMessage = "You have been warned for %reason% by %player%";
     public static String KickMessage = "You have been kicked for %reason% by %player%";
+    public static String DemoteMessage = "You have been demoted for %reason% by %player%";
     public static String BanMessage = "You have been Banned for %reason% by %player%";
     public static String BanMessageTemp = "You have been Banned for %reason% by %player%, for %time%";
     public static String MuteMessage = "You have been Muted for %reason% by %player%";

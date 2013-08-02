@@ -5,6 +5,7 @@ import com.domsplace.listeners.BanListener;
 import java.io.InputStream;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -42,6 +43,7 @@ public class SELBans extends JavaPlugin {
         CommandBan commandBan = new CommandBan(this);
         CommandKick commandKick = new CommandKick(this);
         CommandMute commandMute = new CommandMute(this);
+        CommandDemote commandDemote = new CommandDemote(this);
         CommandPardon commandPardon = new CommandPardon(this);
         CommandPlayerInfo commandPlayerInfo = new CommandPlayerInfo(this);
         
@@ -49,6 +51,7 @@ public class SELBans extends JavaPlugin {
         getCommand("kick").setExecutor(commandKick);
         getCommand("warn").setExecutor(commandKick);
         getCommand("mute").setExecutor(commandMute);
+        getCommand("demote").setExecutor(commandDemote);
         getCommand("pardon").setExecutor(commandPardon);
         getCommand("playerinfo").setExecutor(commandPlayerInfo);
         getCommand("SELBans").setExecutor(commandPlayerInfo);
@@ -78,5 +81,18 @@ public class SELBans extends JavaPlugin {
     
     public void disable() {
         pluginManager.disablePlugin(this);
+    }
+    
+    public static com.domsplace.SELBans getPlugin() {
+        try {
+            Plugin p = Bukkit.getPluginManager().getPlugin("SELBans");
+            if(p == null || !(p instanceof com.domsplace.SELBans)) {
+                return null;
+            }
+            
+            return (com.domsplace.SELBans) p;
+        } catch(NoClassDefFoundError e) {
+            return null;
+        }
     }
 }

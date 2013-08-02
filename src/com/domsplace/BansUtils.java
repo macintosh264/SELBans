@@ -199,6 +199,26 @@ public class BansUtils extends BansBase {
         
         target.sendMessage(KickMessageFormat(WarnMessage, reason, banner));
     }
+
+    public static void DemotePlayer(OfflinePlayer target, String reason, CommandSender banner, String to) {
+        addBan(target, reason, banner, new Date(), "demote");
+        
+        String PlayerName = "CONSOLE";
+        
+        if(!isConsole(banner)) {
+            PlayerName = ((Player) banner).getName();
+        }
+        
+        reason = BansDataManager.config.getString("demote.name") + " to " + to + " for " + reason;
+        
+        String NotifyMessage = ChatImportant + PlayerName + ChatDefault + " " + BansDataManager.config.getString("demote.name") + " " + ChatImportant + target.getName() + ChatDefault + " to " + to + " for " + ChatImportant + reason + ChatDefault + ".";
+        
+        broadcastWithPerm("SELBans.demote.notify", NotifyMessage);
+        
+        if(target.isOnline()) {
+            target.getPlayer().sendMessage(KickMessageFormat(DemoteMessage, reason, banner));
+        }
+    }
     
     public static void MutePlayer(OfflinePlayer player, String reason, CommandSender banner, Date unbandate, boolean useTime) {
         if(!useTime) {

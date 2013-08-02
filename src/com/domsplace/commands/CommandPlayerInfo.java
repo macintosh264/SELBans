@@ -86,6 +86,9 @@ public class CommandPlayerInfo extends BansBase implements CommandExecutor {
             if(command.equalsIgnoreCase("mutes")) {
                 banIDs = BansUtils.getBans(target, "mute");
             }
+            if(command.equalsIgnoreCase("demotes")) {
+                banIDs = BansUtils.getBans(target, "demote");
+            }
             if(command.equalsIgnoreCase("strikes")) {
                 banIDs = BansUtils.getBans(target, "strike");
             }

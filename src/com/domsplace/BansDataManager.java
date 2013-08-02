@@ -10,6 +10,8 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.ArrayList;
+import java.util.List;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 public class BansDataManager extends BansBase {
@@ -86,6 +88,9 @@ public class BansDataManager extends BansBase {
             if(!config.contains(p + "kickmessage")) {
                 config.set(p + "kickmessage", KickMessage);
             }
+            if(!config.contains(p + "demotemessage")) {
+                config.set(p + "demotemessage", DemoteMessage);
+            }
             if(!config.contains(p + "banmessage")) {
                 config.set(p + "banmessage", BanMessage);
             }
@@ -109,8 +114,25 @@ public class BansDataManager extends BansBase {
                 config.set("maxbantime", "NONE");
             }
             
+            if(!config.contains("demote.aliases")) {
+                List<String> aliases = new ArrayList<String>();
+                aliases.add("revoke");
+                config.set("demote.aliases", aliases);
+            }
+            
+            if(!config.contains("demote.name")) {
+                config.set("demote.name", "Demoted");
+            }
+            
+            if(!config.contains("demote.commands")) {
+                List<String> cmds = new ArrayList<String>();
+                cmds.add("manuadd %player% %group%");
+                config.set("demote.commands", cmds);
+            }
+            
             BansBase.WarnMessage = config.getString(p + "warnmessage");
             BansBase.KickMessage = config.getString(p + "kickmessage");
+            BansBase.DemoteMessage = config.getString(p + "demotemessage");
             BansBase.BanMessage = config.getString(p + "banmessage");
             BansBase.BanMessageTemp = config.getString(p + "banmessagetemp");
             BansBase.MuteMessage = config.getString(p + "mutemessage");
