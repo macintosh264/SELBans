@@ -30,17 +30,19 @@ public class CommandMute extends BansBase implements CommandExecutor {
             }
             
             /* Is target Valid? */
-            OfflinePlayer target = Bukkit.getServer().getPlayer(args[0]);
+            OfflinePlayer target = getOfflinePlayer(args[0], sender);
             if(target == null) {
-                target = Bukkit.getServer().getOfflinePlayer(args[0]);
-                if(!target.hasPlayedBefore()) {
-                    sender.sendMessage(ChatError + args[0] + " hasn't played before!");
-                    return true;
-                }
+                sender.sendMessage(ChatError + args[0] + " hasn't played before!");
+                return true;
             }
             
             /* Is target already muted? */
             if(BansUtils.hasActiveBans(target, "mute")) {
+                if(!sender.hasPermission("SELBans.unmute")) {
+                    sender.sendMessage(ChatError + "You don't have permission to unmute.");
+                    return true;
+                }
+                
                 if(args.length != 1) {
                     sender.sendMessage(ChatError + "Player is muted, type /mute [player] to unmute them.");
                     return true;
@@ -73,6 +75,16 @@ public class CommandMute extends BansBase implements CommandExecutor {
             /* Checks to see if arg[1] is a valid time */
             boolean useTime = BansUtils.isValidTime(args[1]);
             
+            if(useTime && !sender.hasPermission("SELBans.tempmute")) {
+                sender.sendMessage(ChatError + "You don't have permission to temp-mute.");
+                return true;
+            }
+            
+            if(!useTime && !sender.hasPermission("SELBans.mute")) {
+                sender.sendMessage(ChatError + "You don't have permission to mute permanently.");
+                return true;
+            }
+            
             if(useTime && args.length < 3) {
                 sender.sendMessage(ChatError + "Enter a reason!");
                 return false;
@@ -92,10 +104,10 @@ public class CommandMute extends BansBase implements CommandExecutor {
                 unbanDate = BansUtils.nowAndString(args[1]);
                 message = "";
                 
-                if(BansBase.MaxBanTime > -1) {
-                    long maxTime = (new Date(BansUtils.getNow()).getTime()) + BansBase.MaxBanTime*3600000;
+                if(!sender.hasPermission("SELBans.tempmute.bypass") && BansBase.MaxBanTime > -1) {
+                    long maxTime = (new Date(BansUtils.getNow()).getTime()) + BansBase.MaxMuteTime*3600000;
                     if(unbanDate.getTime() > maxTime) {
-                        sender.sendMessage(ChatError + "Please enter a time less than " + BansBase.MaxBanTime + " hours.");
+                        sender.sendMessage(ChatError + "Please enter a time less than " + BansBase.MaxMuteTime + " hours.");
                         return true;
                     }
                 }

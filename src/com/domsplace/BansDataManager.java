@@ -113,6 +113,9 @@ public class BansDataManager extends BansBase {
             if(!config.contains("maxbantime")) {
                 config.set("maxbantime", "NONE");
             }
+            if(!config.contains("maxmutetime")) {
+                config.set("maxmutetime", "NONE");
+            }
             
             if(!config.contains("demote.aliases")) {
                 List<String> aliases = new ArrayList<String>();
@@ -142,6 +145,9 @@ public class BansDataManager extends BansBase {
             
             if(!config.getString("maxbantime").equalsIgnoreCase("NONE")) {
                 BansBase.MaxBanTime = config.getLong("maxbantime");
+            }
+            if(!config.getString("maxmutetime").equalsIgnoreCase("NONE")) {
+                BansBase.MaxMuteTime = config.getLong("maxmutetime");
             }
             
             //Add Muted Commands

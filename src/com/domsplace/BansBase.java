@@ -2,6 +2,10 @@ package com.domsplace;
 
 import java.util.ArrayList;
 import java.util.List;
+import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
+import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 
 public class BansBase {
     public static String ChatDefault = "§7";
@@ -21,6 +25,25 @@ public class BansBase {
     public static List<String> mutedCommands = new ArrayList<String>();
     
     public static long MaxBanTime = -1;
+    public static long MaxMuteTime = -1;
     
     public static boolean hideDeathMessage = true;
+    
+    public static OfflinePlayer getOfflinePlayer(String player, CommandSender sender) {
+        OfflinePlayer p = Bukkit.getPlayer(player);
+        if(p == null) {
+            p = Bukkit.getOfflinePlayer(player);
+            return p;
+        }
+        
+        if(!(p instanceof Player)) {
+            return p;
+        }
+        
+        if(p.isOnline() && !((Player) sender).canSee(p.getPlayer())) {
+            p = Bukkit.getOfflinePlayer(player);
+        }
+        
+        return p;
+    }
 }

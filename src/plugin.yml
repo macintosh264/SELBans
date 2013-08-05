@@ -3,14 +3,13 @@ description: Better banning, kicking and warning system, with stored SQL data fo
 main: com.domsplace.SELBans
 authors: [Dominic]
 website: http://domsplace.com/
-version: 1.03
+version: 1.04
 load: POSTWORLD
 permission: You don't have permission for this.
 commands:
    ban:
       description: Bans a player with a specified reason.
       usage: /<command> [player] (length) [reason]
-      permission: SELBans.ban
       permission-message: §cYou don't have permission.
       aliases: [tempban, banish]
    kick:
@@ -33,7 +32,6 @@ commands:
    mute:
       description: Warns a player with a message.
       usage: /<command> [player] (duration) [reason]
-      permission: SELBans.mute
       permission-message: §cYou don't have permission.
       aliases: [quiet, shutup, installwindowsvistakeyboarddrivers]
    demote:
@@ -60,9 +58,14 @@ permissions:
        SELBans.warn: true
        SELBans.kick: true
        SELBans.mute: true
+       SELBans.unmute: true
        SELBans.demote: true
        SELBans.playerinfo: true
        SELBans.reload: true
+       SELBans.tempmute: true
+       SELBans.tempmute.bypass: true
+       SELBans.tempban: true
+       SELBans.tempban.bypass: true
    SELBans.ban.notify:
      description: View when a player is ban.
      default: op
@@ -90,11 +93,16 @@ permissions:
    SELBans.mute.notify:
      description: View when a player is muted.
      default: op
+     children:
+       SELBans.mute.notify: true
    SELBans.mute:
      description: Allows /mute command access, and displays notification.
      default: op
      children:
        SELBans.mute.notify: true
+   SELBans.unmute:
+     description: Allows players to unmute other players.
+     default: op
    SELBans.demote:
      description: Allows /demote command access, and displays notification.
      default: op
@@ -108,4 +116,20 @@ permissions:
      default: op
    SELBans.reload:
      description: Allows access to reload the configuration.
+     default: op
+   SELBans.tempmute:
+     description: Allows players to temporarily mute.
+     default: op
+     children:
+       SELBans.mute.notify: true
+   SELBans.tempban:
+     description: Allows players to temporarily ban.
+     default: op
+     children:
+       SELBans.ban.notify: true
+   SELBans.tempmute.bypass:
+     description: Bypass the temporary mute max time.
+     default: op
+   SELBans.tempban.bypass:
+     description: Bypass the temporary ban max time.
      default: op

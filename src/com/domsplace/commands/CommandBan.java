@@ -46,6 +46,16 @@ public class CommandBan extends BansBase implements CommandExecutor {
             /* Checks to see if arg[1] is a valid time */
             boolean useTime = BansUtils.isValidTime(args[1]);
             
+            if(useTime && !sender.hasPermission("SELBans.tempban")) {
+                sender.sendMessage(ChatError + "You don't have permission to temp-ban.");
+                return true;
+            }
+            
+            if(!useTime && !sender.hasPermission("SELBans.ban")) {
+                sender.sendMessage(ChatError + "You don't have permission to ban permanently.");
+                return true;
+            }
+            
             if(useTime && args.length < 3) {
                 sender.sendMessage(ChatError + "Enter a reason!");
                 return false;
@@ -64,7 +74,7 @@ public class CommandBan extends BansBase implements CommandExecutor {
             if(useTime) {
                 unbanDate = BansUtils.nowAndString(args[1]);
                 
-                if(BansBase.MaxBanTime > -1) {
+                if(!sender.hasPermission("SELBans.tempban.bypass") && BansBase.MaxBanTime > -1) {
                     long maxTime = new Date(BansUtils.getNow()).getTime() + BansBase.MaxBanTime*3600000;
                     if(unbanDate.getTime() > maxTime) {
                         sender.sendMessage(ChatError + "Please enter a time less than " + BansBase.MaxBanTime + " hours.");

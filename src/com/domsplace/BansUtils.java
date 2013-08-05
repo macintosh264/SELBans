@@ -184,7 +184,7 @@ public class BansUtils extends BansBase {
         target.kickPlayer(KickMessageFormat(KickMessage, reason, banner));
     }
     
-    public static void WarnPlayer(Player target, String reason, CommandSender banner) {
+    public static void WarnPlayer(OfflinePlayer target, String reason, CommandSender banner) {
         addBan(target, reason, banner, new Date(), "warn");
         
         String PlayerName = "CONSOLE";
@@ -197,10 +197,13 @@ public class BansUtils extends BansBase {
         
         broadcastWithPerm("SELBans.warn.notify", NotifyMessage);
         
-        target.sendMessage(KickMessageFormat(WarnMessage, reason, banner));
+        if(target.isOnline()) {
+            target.getPlayer().sendMessage(KickMessageFormat(WarnMessage, reason, banner));
+        }
     }
 
     public static void DemotePlayer(OfflinePlayer target, String reason, CommandSender banner, String to) {
+        reason = BansDataManager.config.getString("demote.name") + " to " + to + " for " + reason;
         addBan(target, reason, banner, new Date(), "demote");
         
         String PlayerName = "CONSOLE";
@@ -208,8 +211,6 @@ public class BansUtils extends BansBase {
         if(!isConsole(banner)) {
             PlayerName = ((Player) banner).getName();
         }
-        
-        reason = BansDataManager.config.getString("demote.name") + " to " + to + " for " + reason;
         
         String NotifyMessage = ChatImportant + PlayerName + ChatDefault + " " + BansDataManager.config.getString("demote.name") + " " + ChatImportant + target.getName() + ChatDefault + " to " + to + " for " + ChatImportant + reason + ChatDefault + ".";
         

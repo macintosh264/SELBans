@@ -5,6 +5,7 @@ import com.domsplace.BansDataManager;
 import com.domsplace.BansUtils;
 import com.domsplace.SELBans;
 import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -38,9 +39,9 @@ public class CommandDemote extends BansBase implements CommandExecutor {
             }
             
             /* Is target Valid? */
-            Player target = Bukkit.getServer().getPlayer(args[0]);
+            OfflinePlayer target = getOfflinePlayer(args[0], sender);
             if(target == null) {
-                sender.sendMessage(ChatError + args[0] + " isn't online!");
+                sender.sendMessage(ChatError + args[0] + " hasn't played before!");
                 return true;
             }
             String message = "";

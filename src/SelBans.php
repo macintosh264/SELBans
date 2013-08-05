@@ -562,7 +562,7 @@
 			}
 			
 			function formatPlayer(player) {
-				addPlayer(player["Player"], player["Bans"], player["Kicks"], player["Warns"], player["Mutes"]);
+				addPlayer(player["Player"], player["Bans"], player["Kicks"], player["Warns"], player["Mutes"], player["Demotes"]);
 			}
 			
 			function clearAllData() {
@@ -616,7 +616,7 @@
 				}
 			}
 			
-			function addPlayer(banned, bans, kicks, warns, mutes) {
+			function addPlayer(banned, bans, kicks, warns, mutes, demotes) {
 				var el = $("#BansResults");
 				
 				var newBan = '' + 
@@ -627,6 +627,7 @@
 					'Kicks: <span class="badge badge-warning" style="margin-right: 8px;">' + kicks + '</span><br />'+
 					'Warnings: <span class="badge badge-info" style="margin-right: 8px;">' + warns + '</span> '+
 					'Mutes: <span class="badge" style="margin-right: 8px;">' + mutes + '</span>'+
+					'Demotions: <span class="badge" style="margin-right: 8px;">' + demotes + '</span>'+
 					'</div>' +	
 					'</div>';
 				
@@ -865,16 +866,16 @@
 				$("#BansTabBans").html(defaultTabs());
 				$("#BansTabKicks").html(defaultTabs());
 				$("#BansTabWarns").html(defaultTabs());
-				$("#BansTabDemotes").html(defaultTabs());
 				$("#BansTabMutes").html(defaultTabs());
+				$("#BansTabDemotes").html(defaultTabs());
 				
 				getPlayer(player);
 				
 				checkForNothing($("#BansTabBans #accordion"));
 				checkForNothing($("#BansTabKicks #accordion"));
 				checkForNothing($("#BansTabWarns #accordion"));
-				checkForNothing($("#BansTabDemotes #accordion"));
 				checkForNothing($("#BansTabMutes #accordion"));
+				checkForNothing($("#BansTabDemotes #accordion"));
 				
 				$("#BansModal").modal('show');
 				
@@ -928,7 +929,7 @@
 						<li><a href="#BansTabKicks" data-toggle="tab">Kicks</a></li>
 						<li><a href="#BansTabWarns" data-toggle="tab">Warnings</a></li>
 						<li><a href="#BansTabMutes" data-toggle="tab">Mutes</a></li>
-						<li><a href="#BansTabsDemotes" data-toggle="tab">Demotions</a></li>
+						<li><a href="#BansTabDemotes" data-toggle="tab">Demotions</a></li>
 					</ul>
 					<div class="tab-content">
 						<div class="tab-pane active" id="BansTabBans">
