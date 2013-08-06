@@ -148,6 +148,9 @@ public class BansUtils extends BansBase {
         NotifyMessage += ChatDefault + ".";
 
         broadcastWithPerm("SELBans.ban.notify", NotifyMessage);
+        if(!banner.hasPermission("SELBans.ban.notify")) {
+            banner.sendMessage(NotifyMessage);
+        }
         
         player.setBanned(true);
         
@@ -180,6 +183,9 @@ public class BansUtils extends BansBase {
         String NotifyMessage = ChatImportant + PlayerName + ChatDefault + " kicked " + ChatImportant + target.getName() + ChatDefault + " for " + ChatImportant + reason + ChatDefault + ".";
         
         broadcastWithPerm("SELBans.kick.notify", NotifyMessage);
+        if(!banner.hasPermission("SELBans.kick.notify")) {
+            banner.sendMessage(NotifyMessage);
+        }
         
         target.kickPlayer(KickMessageFormat(KickMessage, reason, banner));
     }
@@ -196,6 +202,9 @@ public class BansUtils extends BansBase {
         String NotifyMessage = ChatImportant + PlayerName + ChatDefault + " warned " + ChatImportant + target.getName() + ChatDefault + " for " + ChatImportant + reason + ChatDefault + ".";
         
         broadcastWithPerm("SELBans.warn.notify", NotifyMessage);
+        if(!banner.hasPermission("SELBans.warn.notify")) {
+            banner.sendMessage(NotifyMessage);
+        }
         
         if(target.isOnline()) {
             target.getPlayer().sendMessage(KickMessageFormat(WarnMessage, reason, banner));
@@ -215,6 +224,9 @@ public class BansUtils extends BansBase {
         String NotifyMessage = ChatImportant + PlayerName + ChatDefault + " " + BansDataManager.config.getString("demote.name") + " " + ChatImportant + target.getName() + ChatDefault + " to " + to + " for " + ChatImportant + reason + ChatDefault + ".";
         
         broadcastWithPerm("SELBans.demote.notify", NotifyMessage);
+        if(!banner.hasPermission("SELBans.demote.notify")) {
+            banner.sendMessage(NotifyMessage);
+        }
         
         if(target.isOnline()) {
             target.getPlayer().sendMessage(KickMessageFormat(DemoteMessage, reason, banner));
@@ -243,6 +255,9 @@ public class BansUtils extends BansBase {
         NotifyMessage += ChatDefault + ".";
 
         broadcastWithPerm("SELBans.mute.notify", NotifyMessage);
+        if(!banner.hasPermission("SELBans.mute.notify")) {
+            banner.sendMessage(NotifyMessage);
+        }
         
         /* Send Localized Message */
         if(player.isOnline()) {

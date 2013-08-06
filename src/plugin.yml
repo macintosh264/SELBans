@@ -3,14 +3,13 @@ description: Better banning, kicking and warning system, with stored SQL data fo
 main: com.domsplace.SELBans
 authors: [Dominic]
 website: http://domsplace.com/
-version: 1.04
+version: 1.05
 load: POSTWORLD
 permission: You don't have permission for this.
 commands:
    ban:
       description: Bans a player with a specified reason.
       usage: /<command> [player] (length) [reason]
-      permission-message: §cYou don't have permission.
       aliases: [tempban, banish]
    kick:
       description: Kicks a player with a specified reason.
@@ -32,7 +31,6 @@ commands:
    mute:
       description: Warns a player with a message.
       usage: /<command> [player] (duration) [reason]
-      permission-message: §cYou don't have permission.
       aliases: [quiet, shutup, installwindowsvistakeyboarddrivers]
    demote:
       description: Demotes a player and stores the reason.
@@ -53,13 +51,19 @@ commands:
 permissions:
    SELBans.*:
      description: Gives access to all SELBans permissions
+     default: op
      children:
        SELBans.ban: true
        SELBans.warn: true
        SELBans.kick: true
        SELBans.mute: true
-       SELBans.unmute: true
        SELBans.demote: true
+       SELBans.ban.notify: true
+       SELBans.warn.notify: true
+       SELBans.kick.notify: true
+       SELBans.mute.notify: true
+       SELBans.demote: true
+       SELBans.unmute: true
        SELBans.playerinfo: true
        SELBans.reload: true
        SELBans.tempmute: true
@@ -72,42 +76,30 @@ permissions:
    SELBans.ban:
      description: Allows /ban command access, and displays notification.
      default: op
-     children:
-       SELBans.ban.notify: true
    SELBans.warn.notify:
      description: View when a player is warned.
      default: op
    SELBans.warn:
      description: Allows /warn command access, and displays notification.
      default: op
-     children:
-       SELBans.warn.notify: true
    SELBans.kick.notify:
      description: View when a player is kicked.
      default: op
    SELBans.kick:
      description: Allows /ban command access, and displays notification.
      default: op
-     children:
-       SELBans.kick.notify: true
    SELBans.mute.notify:
      description: View when a player is muted.
      default: op
-     children:
-       SELBans.mute.notify: true
    SELBans.mute:
      description: Allows /mute command access, and displays notification.
      default: op
-     children:
-       SELBans.mute.notify: true
    SELBans.unmute:
      description: Allows players to unmute other players.
      default: op
    SELBans.demote:
      description: Allows /demote command access, and displays notification.
      default: op
-     children:
-       SELBans.demote.notify: true
    SELBans.pardon:
      description: Allows /pardon command access.
      default: op
@@ -120,13 +112,9 @@ permissions:
    SELBans.tempmute:
      description: Allows players to temporarily mute.
      default: op
-     children:
-       SELBans.mute.notify: true
    SELBans.tempban:
      description: Allows players to temporarily ban.
      default: op
-     children:
-       SELBans.ban.notify: true
    SELBans.tempmute.bypass:
      description: Bypass the temporary mute max time.
      default: op
