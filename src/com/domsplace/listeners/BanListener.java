@@ -73,6 +73,7 @@ public class BanListener extends BansBase implements Listener {
             e.getPlayer().sendMessage(BansUtils.KickMessageFormat(MuteMessageCommand, reason, banner));
             Bukkit.getLogger().info(e.getPlayer().getName() + " tried to run the command /" + tc + " but is muted.");
             e.setCancelled(true);
+            e.setMessage("");
             return;
         }
     }
@@ -110,6 +111,7 @@ public class BanListener extends BansBase implements Listener {
         e.getPlayer().sendMessage(BansUtils.KickMessageFormat(MuteMessageChat, reason, banner));
         Bukkit.getLogger().info(e.getPlayer().getName() + " tried to say \"" + e.getMessage() + "\" but is muted.");
         e.setCancelled(true);
+        e.setMessage("");
     }
     
     @EventHandler(priority=EventPriority.HIGHEST, ignoreCancelled=true)
