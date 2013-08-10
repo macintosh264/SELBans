@@ -5,7 +5,6 @@ import static com.domsplace.BansBase.ChatError;
 import com.domsplace.BansUtils;
 import com.domsplace.SELBans;
 import java.util.Date;
-import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -34,13 +33,10 @@ public class CommandBan extends BansBase implements CommandExecutor {
             }
             
             /* Is target Valid? */
-            OfflinePlayer target = Bukkit.getServer().getPlayer(args[0]);
+            OfflinePlayer target = getOfflinePlayer(args[0], sender);
             if(target == null) {
-                target = Bukkit.getServer().getOfflinePlayer(args[0]);
-                if(!target.hasPlayedBefore()) {
-                    sender.sendMessage(ChatError + args[0] + " hasn't played before!");
-                    return true;
-                }
+                sender.sendMessage(ChatError + args[0] + " hasn't played before.");
+                return true;
             }
             
             /* Checks to see if arg[1] is a valid time */

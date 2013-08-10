@@ -15,6 +15,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
+import org.bukkit.event.player.PlayerChatEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerLoginEvent;
 import org.bukkit.scheduler.BukkitTask;
@@ -30,7 +31,8 @@ public class BanListener extends BansBase implements Listener {
     public BanListener(SELBans base) {
         plugin = base;
         
-        checkBans = Bukkit.getServer().getScheduler().runTaskTimer(plugin, new Runnable() {
+        checkBans = Bukkit.getServer().getScheduler().runTaskTimerAsynchronously(plugin, new Runnable() {
+            @Override
             public void run() {
                 BansUtils.checkBans();
             }
@@ -100,8 +102,24 @@ public class BanListener extends BansBase implements Listener {
         }
     }
     
-    @EventHandler
-    public void onChat(AsyncPlayerChatEvent e) {
+    @EventHandler(priority=EventPriority.LOWEST)
+    public void onAsyncChat(AsyncPlayerChatEvent e) {
+        if(BansUtils.CanPlayerTalk(e.getPlayer())) {
+            return;
+        }
+        
+        String reason = BansUtils.getBanReason(e.getPlayer(), "mute");
+        String banner = BansUtils.getBanner(e.getPlayer(), "mute");
+        
+        e.getPlayer().sendMessage(BansUtils.KickMessageFormat(MuteMessageChat, reason, banner));
+        Bukkit.getLogger().info(e.getPlayer().getName() + " tried to say \"" + e.getMessage() + "\" but is muted.");
+        e.setCancelled(true);
+        e.setMessage("");
+    }
+    
+    //Added Depreciated Chat Event (Should help with some other chat plugins)
+    @EventHandler(priority=EventPriority.LOWEST)
+    public void onChat(PlayerChatEvent e) {
         if(BansUtils.CanPlayerTalk(e.getPlayer())) {
             return;
         }
