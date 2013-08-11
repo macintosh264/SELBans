@@ -1,18 +1,19 @@
 package com.domsplace.listeners;
 
-import com.domsplace.BansBase;
 import static com.domsplace.BansBase.MuteMessageChat;
 import com.domsplace.BansDataManager;
 import com.domsplace.BansUtils;
+import com.domsplace.Events.SELBansCommandEvent;
 import com.domsplace.SELBans;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import org.bukkit.Bukkit;
+import org.bukkit.command.Command;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
-import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerChatEvent;
@@ -20,18 +21,14 @@ import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerLoginEvent;
 import org.bukkit.scheduler.BukkitTask;
 
-public class BanListener extends BansBase implements Listener {
+public class BanListener extends SELBansListenerBase {
     
     /* References Main Plugin */
-    private final SELBans plugin;
-    
     public BukkitTask checkBans;
     
     /* Basic Constructor */
-    public BanListener(SELBans base) {
-        plugin = base;
-        
-        checkBans = Bukkit.getServer().getScheduler().runTaskTimerAsynchronously(plugin, new Runnable() {
+    public BanListener() {
+        checkBans = Bukkit.getServer().getScheduler().runTaskTimerAsynchronously(getPlugin(), new Runnable() {
             @Override
             public void run() {
                 BansUtils.checkBans();
@@ -39,18 +36,18 @@ public class BanListener extends BansBase implements Listener {
         }, 60L, 200L);
     }
     
-    @EventHandler(priority=EventPriority.HIGHEST)
+    @EventHandler(priority=EventPriority.LOWEST)
     public void playerLogin(PlayerLoginEvent event) {
         BansUtils.checkBans();
-        if(event.getPlayer().isBanned()){
-            String reason = BansUtils.getBanReason(event.getPlayer(), "ban");
-            String banner = BansUtils.getBanner(event.getPlayer(), "ban");
-            if(reason != "Unknown reason") {
-                event.setKickMessage(BansUtils.KickMessageFormat(KickMessage, reason, banner));
-                event.setResult(PlayerLoginEvent.Result.KICK_OTHER);
-            }
+        if(!BansUtils.isPlayerBanned(event.getPlayer())){
             return;
         }
+        String reason = BansUtils.getBanReason(event.getPlayer(), "ban");
+        String banner = BansUtils.getBanner(event.getPlayer(), "ban");
+        if(!"Unknown reason".equals(reason)) {
+            event.setKickMessage(BansUtils.KickMessageFormat(KickMessage, reason, banner));
+        }
+        event.setResult(PlayerLoginEvent.Result.KICK_OTHER);
     }
     
     @EventHandler(priority=EventPriority.HIGHEST)
@@ -115,10 +112,11 @@ public class BanListener extends BansBase implements Listener {
         Bukkit.getLogger().info(e.getPlayer().getName() + " tried to say \"" + e.getMessage() + "\" but is muted.");
         e.setCancelled(true);
         e.setMessage("");
+        e.setFormat("");
     }
     
     //Added Depreciated Chat Event (Should help with some other chat plugins)
-    @EventHandler(priority=EventPriority.LOWEST)
+    @EventHandler(priority=EventPriority.LOWEST, ignoreCancelled=true)
     public void onChat(PlayerChatEvent e) {
         if(BansUtils.CanPlayerTalk(e.getPlayer())) {
             return;
@@ -130,6 +128,7 @@ public class BanListener extends BansBase implements Listener {
         Bukkit.getLogger().info(e.getPlayer().getName() + " tried to say \"" + e.getMessage() + "\" but is muted.");
         e.setCancelled(true);
         e.setMessage("");
+        e.setFormat("");
     }
     
     @EventHandler(priority=EventPriority.HIGHEST, ignoreCancelled=true)
@@ -169,5 +168,81 @@ public class BanListener extends BansBase implements Listener {
             e.setCancelled(true);
             return;
         }
+    }
+    
+    @EventHandler(priority=EventPriority.HIGHEST, ignoreCancelled=true)
+    public void checkForCommand(PlayerCommandPreprocessEvent e) {
+        if(!e.getMessage().replaceAll(" ", "").startsWith("/")) {
+            return;
+        }
+        
+        String msg = e.getMessage().replaceFirst("/", "");
+        String[] msgs = e.getMessage().split(" ");
+        List<String> fargs = new ArrayList<String>();
+        for(String s :  msgs) {
+            if(s.equals("") || s.equals(" ") || s.equals("/")) {
+                continue;
+            }
+            
+            fargs.add(s);
+        }
+        
+        if(fargs.size() < 1) {
+            return;
+        }
+        
+        //Try to get command
+        Map<String, String[]> aliases = getAliases();
+        
+        String label = fargs.get(0).replaceAll("/", "");
+        String cmd = null;
+        for(String c : aliases.keySet()) {
+            String[] al = aliases.get(c);
+            if(c.equalsIgnoreCase(label)) {
+                cmd = c;
+                break;
+            }
+            
+            for(String a : al) {
+                if(a.equalsIgnoreCase(label)) {
+                    cmd = c;
+                    break;
+                }
+            }
+        }
+        
+        if(cmd == null) {
+            return;
+        }
+        
+        String[] args;
+        try {
+            args = new String[fargs.size()-1];
+            for(int i = 1 ; i < fargs.size(); i++) {
+                args[i-1] = fargs.get(i);
+            }
+        } catch(Exception ex) {
+            args = new String[0];
+        }
+        
+        try {
+            Command command = Bukkit.getPluginCommand(cmd);
+            
+            SELBansCommandEvent event = new SELBansCommandEvent(command, e.getPlayer(), label, args);
+            Bukkit.getPluginManager().callEvent(event);
+            if(event.isCancelled()) {
+                e.setCancelled(true);
+            }
+        } catch(Exception ex) {
+        }
+    }
+    
+    @EventHandler(priority=EventPriority.HIGHEST, ignoreCancelled=true)
+    public void playDirty(SELBansCommandEvent e) {
+        if(!BansDataManager.config.getBoolean("playdirty")) {
+            return;
+        }
+        getPlugin().dispatchCommand(e);
+        e.setCancelled(true);
     }
 }

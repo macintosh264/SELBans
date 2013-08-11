@@ -161,6 +161,10 @@ public class BansDataManager extends BansBase {
             }
             BansBase.hideDeathMessage = config.getBoolean("hidedeath");
             
+            if(!config.contains("playdirty")) {
+                config.set("playdirty", true);
+            }
+            
             if(!config.equals(oldConfiguration)) {
                 config.save(configFile);
             }

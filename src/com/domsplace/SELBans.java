@@ -1,5 +1,6 @@
 package com.domsplace;
 
+import com.domsplace.Events.SELBansCommandEvent;
 import com.domsplace.commands.*;
 import com.domsplace.listeners.BanListener;
 import java.io.InputStream;
@@ -16,6 +17,13 @@ public class SELBans extends JavaPlugin {
     public PluginManager pluginManager;
     
     public static BanListener listenerBan;
+    
+    public static CommandBan commandBan;
+    public static CommandKick commandKick;
+    public static CommandMute commandMute;
+    public static CommandDemote commandDemote;
+    public static CommandPardon commandPardon;
+    public static CommandPlayerInfo commandPlayerInfo;
     
     @Override
     public void onEnable() {
@@ -40,12 +48,12 @@ public class SELBans extends JavaPlugin {
         }
         
         /*** Register Commands ***/
-        CommandBan commandBan = new CommandBan(this);
-        CommandKick commandKick = new CommandKick(this);
-        CommandMute commandMute = new CommandMute(this);
-        CommandDemote commandDemote = new CommandDemote(this);
-        CommandPardon commandPardon = new CommandPardon(this);
-        CommandPlayerInfo commandPlayerInfo = new CommandPlayerInfo(this);
+        commandBan = new CommandBan(this);
+        commandKick = new CommandKick(this);
+        commandMute = new CommandMute(this);
+        commandDemote = new CommandDemote(this);
+        commandPardon = new CommandPardon(this);
+        commandPlayerInfo = new CommandPlayerInfo(this);
         
         getCommand("ban").setExecutor(commandBan);
         getCommand("kick").setExecutor(commandKick);
@@ -56,9 +64,11 @@ public class SELBans extends JavaPlugin {
         getCommand("playerinfo").setExecutor(commandPlayerInfo);
         getCommand("SELBans").setExecutor(commandPlayerInfo);
         
+        /*** Hook into plugins ***/
+        BansHookUtils.HookIntoPlugins();
+        
         /*** Register Listeners and start Threads ***/
-        listenerBan = new BanListener(this);
-        Bukkit.getPluginManager().registerEvents(listenerBan, this);
+        listenerBan = new BanListener();
         
         isPluginEnabled = true;
         Bukkit.broadcastMessage("§dLoaded " + pluginYML.getString("name") + " version " + pluginYML.getString("version") + " successfully.");
@@ -93,6 +103,30 @@ public class SELBans extends JavaPlugin {
             return (com.domsplace.SELBans) p;
         } catch(NoClassDefFoundError e) {
             return null;
+        }
+    }
+    
+    public void dispatchCommand(SELBansCommandEvent e) {
+        if(e.getCommand().getName().equalsIgnoreCase("ban")) {
+            commandBan.onCommand(e.getPlayer(), e.getCommand(), e.getLabel(), e.getArgs());
+        }
+        if(e.getCommand().getName().equalsIgnoreCase("kick")) {
+            commandKick.onCommand(e.getPlayer(), e.getCommand(), e.getLabel(), e.getArgs());
+        }
+        if(e.getCommand().getName().equalsIgnoreCase("warn")) {
+            commandKick.onCommand(e.getPlayer(), e.getCommand(), e.getLabel(), e.getArgs());
+        }
+        if(e.getCommand().getName().equalsIgnoreCase("mute")) {
+            commandMute.onCommand(e.getPlayer(), e.getCommand(), e.getLabel(), e.getArgs());
+        }
+        if(e.getCommand().getName().equalsIgnoreCase("pardon")) {
+            commandPardon.onCommand(e.getPlayer(), e.getCommand(), e.getLabel(), e.getArgs());
+        }
+        if(e.getCommand().getName().equalsIgnoreCase("playerinfo")) {
+            commandPlayerInfo.onCommand(e.getPlayer(), e.getCommand(), e.getLabel(), e.getArgs());
+        }
+        if(e.getCommand().getName().equalsIgnoreCase("SELBans")) {
+            commandPlayerInfo.onCommand(e.getPlayer(), e.getCommand(), e.getLabel(), e.getArgs());
         }
     }
 }

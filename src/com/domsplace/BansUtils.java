@@ -333,13 +333,12 @@ public class BansUtils extends BansBase {
     }
     
     public static boolean isPlayerBanned(OfflinePlayer player) {
-        if(!player.isBanned()) {
-            if(hasActiveBans(player, "bans")) {
-                return true;
-            }
-            return false;
+        if(hasActiveBans(player, "ban")) {
+            player.setBanned(true);
+            return true;
         }
-        return true;
+        player.setBanned(false);
+        return false;
     }
     
     public static int getActiveBannedTimes(OfflinePlayer player, String type) {
@@ -391,7 +390,7 @@ public class BansUtils extends BansBase {
     public static void checkBans() {
         String statement = ""
                 + "SELECT * FROM " + sqlDB + "."+ sqlTable + "Bans "
-                + "WHERE active='true' ORDER BY date ASC";
+                + "WHERE active='true' AND date != unbandate ORDER BY date ASC";
         List<Map<String, String>> results = sqlFetch(statement);
         if(results == null) {
             return;

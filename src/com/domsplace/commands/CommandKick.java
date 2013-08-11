@@ -4,7 +4,6 @@ import com.domsplace.BansBase;
 import static com.domsplace.BansBase.getOfflinePlayer;
 import com.domsplace.BansUtils;
 import com.domsplace.SELBans;
-import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -34,7 +33,7 @@ public class CommandKick extends BansBase implements CommandExecutor {
             }
             
             /* Is target Valid? */
-            Player target = Bukkit.getServer().getPlayer(args[0]);
+            Player target = getPlayer(args[0], sender);
             if(target == null) {
                 sender.sendMessage(ChatError + args[0] + " isn't online!");
                 return true;

@@ -30,7 +30,7 @@ public class CommandPardon extends BansBase implements CommandExecutor {
                 return false;
             }
             
-            OfflinePlayer target = Bukkit.getServer().getOfflinePlayer(args[0]);
+            OfflinePlayer target = getOfflinePlayer(args[0], sender);
             if(target == null) {
                 sender.sendMessage(ChatError + args[0] + " has never played before!");
                 return true;

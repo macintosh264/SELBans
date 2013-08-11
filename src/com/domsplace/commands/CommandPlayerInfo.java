@@ -48,13 +48,10 @@ public class CommandPlayerInfo extends BansBase implements CommandExecutor {
             }
             
             /* Is target Valid? */
-            OfflinePlayer target = Bukkit.getServer().getPlayer(args[0]);
+            OfflinePlayer target = getOfflinePlayer(args[0], sender);
             if(target == null) {
-                target = Bukkit.getServer().getOfflinePlayer(args[0]);
-                if(!target.hasPlayedBefore()) {
-                    sender.sendMessage(ChatError + args[0] + " hasn't played before!");
-                    return true;
-                }
+                sender.sendMessage(ChatError + args[0] + " hasn't played before!");
+                return true;
             }
             
             int page = 1;
