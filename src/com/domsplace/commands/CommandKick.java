@@ -46,6 +46,11 @@ public class CommandKick extends BansBase implements CommandExecutor {
                     message += " ";
                 }
             }
+            /* Fixing the Permission errors @macintosh264 */
+            if(!sender.hasPermission("SELBans.kick")) {
+                sender.sendMessage(ChatError + "You don't have permission to kick.");
+                return true;
+            }
             
             BansUtils.KickPlayer(target, message, sender);
             return true;
@@ -76,7 +81,10 @@ public class CommandKick extends BansBase implements CommandExecutor {
                     message += " ";
                 }
             }
-            
+            if(!sender.hasPermission("SELBans.warn")) {
+                sender.sendMessage(ChatError + "You don't have permission to warn.");
+                return true;
+            }
             BansUtils.WarnPlayer(target, message, sender);
             return true;
         }
